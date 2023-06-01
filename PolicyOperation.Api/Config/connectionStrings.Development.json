@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+      "TimePro": "Server=timesap-tst-db;Initial Catalog=TimePro;Database=TimePro;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;"
+   }
+}

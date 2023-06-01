@@ -1,0 +1,16 @@
+{
+  "ExternalServices": {
+    "SERVICE_NAME": "SERVICE_URL"
+  },
+  "Validateclientcertificates": {
+    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/ssa/policies/certificates/time/validateclientcertificates"
+  },
+
+  "PolicyCertificateDatail": {
+    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/arg/channel/policycertificates/details"
+  },
+
+  "ProfileUserData": {
+    "BaseUrl": "https://portalintermediarios-pre-api.gruposancorseguros.com/api/v2/user/profileuserdata"
+  }
+}
