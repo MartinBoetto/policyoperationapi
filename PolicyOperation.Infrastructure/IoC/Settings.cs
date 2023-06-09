@@ -20,7 +20,7 @@ namespace PolicyOperation.Infrastructure.IoC
             configuration.Bind(nameof(AppConfig.Logging), logging);
             configuration.Bind(nameof(AppConfig.Validateclientcertificates), validateclientcertificates);
             configuration.Bind(nameof(AppConfig.PolicyCertificateDatail), policyCertificateDatail);
-            configuration.Bind(nameof(AppConfig.ProfileUserData), profileUserData);
+            configuration.Bind(nameof(AppConfig.ProfileUserData), profileUserData); 
 
             //inyectar al site
             services.AddSingleton(appConfig);
