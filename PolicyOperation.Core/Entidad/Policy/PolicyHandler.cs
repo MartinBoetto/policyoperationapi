@@ -5,6 +5,7 @@ using Gss.CorporateApps.Infrastructure.Contracts.OperationResult;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
+using PolicyOperation.Core.Managers;
 using PolicyOperation.Data.Repositories;
 using PolicyOperation.Data.TimePro;
 using PolicyOperation.ExternalServices.Interface;
@@ -29,6 +30,7 @@ namespace PolicyOperation.Core.Entidad.Policy
         private readonly IProfileUserData _profileUserData;
         private readonly ITimeRepository _timeRepository;
 
+
         public PolicyHandler(IPolicyForBupIdValidation policyForBupIdValidation, IPolicyCertificateDatail policyCertificateDatail, IMemoryCache cacheProvider, IProfileUserData profileUserData, ITimeRepository timeRepository)
         {
             _policyForBupIdValidation = policyForBupIdValidation;
@@ -51,6 +53,7 @@ namespace PolicyOperation.Core.Entidad.Policy
             Console.WriteLine(request.puid);
             _puid = new PuidModel(request.puid);
 
+            /*
             //seteo el Username y BupId en cache
             //List<CeiboUserModel> user = SetUserInCache();
             //this.setCeiboUserModelCache(request.puid);
@@ -69,7 +72,10 @@ namespace PolicyOperation.Core.Entidad.Policy
 
                 setCeiboUserModelCache(userName, userModel);
             }
-           
+            */
+            CeiboUserModel userModel = null;
+            UserCaching userCaching = new UserCaching(_timeRepository, _cacheProvider);
+            userModel = await userCaching.GetuserFromCache(request.token) as CeiboUserModel;
 
             //Flujo segun COreId
             if (_puid.coreId == 1) 

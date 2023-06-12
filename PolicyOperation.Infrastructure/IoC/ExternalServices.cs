@@ -28,6 +28,13 @@ namespace PolicyOperation.Infrastructure.IoC
             services.AddTransient<IProfileUserData>(provider => new ProfileUserData(
                new EndpointAddress(new Uri(AppConfig.ProfileUserData.BaseUrl))));
 
+            services.AddTransient<IIntermediariesForUser>(provider => new IntermediariesForUser(
+               new EndpointAddress(new Uri(AppConfig.IntermediariesForUser.BaseUrl))));
+
+            services.AddTransient<IPoliciesSummary>(provider => new PoliciesSummary(
+              new EndpointAddress(new Uri(AppConfig.PoliciesSummary.BaseUrl))));
+
+
 
         }
     }

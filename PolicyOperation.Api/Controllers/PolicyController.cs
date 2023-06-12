@@ -42,7 +42,7 @@ namespace PolicyOperation.Api.Controllers
             {
                 var valurResult = result.Value as PolicyModel;
                 if (valurResult.policyDetails != null)
-                    return Ok(valurResult.policyDetails);
+                    return Ok(valurResult);
                 else
                     return StatusCode(500, valurResult.messages);
 ;            }
@@ -52,13 +52,38 @@ namespace PolicyOperation.Api.Controllers
             }
         }
 
-        [HttpGet]
+
+
+        [HttpPost]
         [ProducesResponseType(typeof(PolicyModel), 401)]
-        [SwaggerOperation("Obtener todas las Polizas.")]
-        [Route("/policies")]
-        public async Task<IActionResult> GetAllPolicy()
+        [SwaggerOperation("Obtener todas las Polizas de un intermediariariario segun los parametros de busqueda")]
+        [Route("/policies/summaries")]
+        public async Task<IActionResult> GetAllPolies(PoliciesSummaryRequest requestModel, [FromHeader] string? Authorization)
         {
-            return await CallHandlerFromRequestAsync(null);
+
+            requestModel.token = Authorization;
+            var result = await CallHandlerFromRequestAsync(requestModel) as OkObjectResult;
+
+
+            if (result == null)
+            {
+                return NoContent();
+            }
+            else if (result.Value != null)
+            {
+                var valurResult = result.Value as PoliciesSummaryModel;
+                if (valurResult.policiesList != null)
+                    return Ok(valurResult);
+                else
+                    return StatusCode(500, valurResult.messages);
+                ;
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            
         }
     }
 

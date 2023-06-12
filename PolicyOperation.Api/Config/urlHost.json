@@ -1,0 +1,5 @@
+﻿{
+  "HostName": {
+    "UrlExpose": "https://localhost:7257" //URL donde estan expuestas las APIS para generar la info de Hipermedia
+  }
+} 

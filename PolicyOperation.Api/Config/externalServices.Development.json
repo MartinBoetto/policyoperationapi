@@ -12,5 +12,11 @@
 
   "ProfileUserData": {
     "BaseUrl": "https://portalintermediarios-pre-api.gruposancorseguros.com/api/v2/user/profileuserdata"
+  },
+  "IntermediariesForUser": {
+    "BaseUrl": "https://iib-tst.gruposancorseguros.com/ssa/policies/intermediaries/time/list"
+  },
+  "PoliciesSummary": {
+    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/arg/channel/policies/ids"
   }
 }

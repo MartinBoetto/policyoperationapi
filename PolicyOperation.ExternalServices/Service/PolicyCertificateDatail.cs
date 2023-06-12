@@ -89,8 +89,9 @@ namespace PolicyOperation.ExternalServices.Service
                     var tktESBAuthorization = Encoding.UTF8.GetBytes(output);
                     string tktESBbase64String = Convert.ToBase64String(tktESBAuthorization).TrimEnd('=');//, Base64FormattingOptions.InsertLineBreaks);
 
-                    
-                    client.DefaultRequestHeaders.Add("Authorization", tktESBbase64String);
+
+                    //client.DefaultRequestHeaders.Add("Authorization", tktESBbase64String);
+                    client.DefaultRequestHeaders.Add("Authorization", "ewogICJ1c2VyTmFtZSI6ICIzMjQ0NCIsCiAgImJ1cElkIjogNTI2MTMyNwp9");
 
                     string endpoint = $"{endpointAddress}?referenceNumber={puid.certificateId}" +
                             $"&certificateNumber={puid.certificateNumber}";

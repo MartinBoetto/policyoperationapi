@@ -34,6 +34,18 @@
             public static string BaseUrl { get; set; }
         }
 
+        public class IntermediariesForUser
+        {
+            public static string BaseUrl { get; set; }
+        }
+
+        public class PoliciesSummary
+        {
+            public static string BaseUrl { get; set; }
+        }
+
+
     }
 }
+
 

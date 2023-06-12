@@ -28,4 +28,10 @@
     <ProjectReference Include="..\PolicyOperation.Models\PolicyOperation.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Config\urlHost.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

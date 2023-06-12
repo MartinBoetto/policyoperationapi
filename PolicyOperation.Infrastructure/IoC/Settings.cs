@@ -15,12 +15,16 @@ namespace PolicyOperation.Infrastructure.IoC
             var validateclientcertificates = new AppConfig.Validateclientcertificates();
             var policyCertificateDatail = new AppConfig.PolicyCertificateDatail();
             var profileUserData = new AppConfig.ProfileUserData();
+            var intermediariesForUser = new AppConfig.IntermediariesForUser();
+            var policiesSummary = new AppConfig.PoliciesSummary();
 
             //Bindea el .config a la clase de forma automática, segun los nombres de propiedades
             configuration.Bind(nameof(AppConfig.Logging), logging);
             configuration.Bind(nameof(AppConfig.Validateclientcertificates), validateclientcertificates);
             configuration.Bind(nameof(AppConfig.PolicyCertificateDatail), policyCertificateDatail);
-            configuration.Bind(nameof(AppConfig.ProfileUserData), profileUserData); 
+            configuration.Bind(nameof(AppConfig.ProfileUserData), profileUserData);
+            configuration.Bind(nameof(AppConfig.IntermediariesForUser), intermediariesForUser);
+            configuration.Bind(nameof(AppConfig.PoliciesSummary), policiesSummary);
 
             //inyectar al site
             services.AddSingleton(appConfig);
@@ -28,6 +32,8 @@ namespace PolicyOperation.Infrastructure.IoC
             services.AddSingleton(validateclientcertificates);
             services.AddSingleton(policyCertificateDatail);
             services.AddMemoryCache();
+            services.AddSingleton(intermediariesForUser);
+            services.AddSingleton(policiesSummary);
         }
     }
 }
