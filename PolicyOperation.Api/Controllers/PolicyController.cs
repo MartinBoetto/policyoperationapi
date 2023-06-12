@@ -28,13 +28,11 @@ namespace PolicyOperation.Api.Controllers
                 puid = puid,
                 token = Authorization
             };
-            /*OkObjectResult result = (OkObjectResult)await CallHandlerFromRequestAsync(requestModel);
-            return Ok(result.Value);
-            */
+            
             var result = await CallHandlerFromRequestAsync(requestModel) as OkObjectResult;
 
 
-            //var obj = result as ObjectResult;
+            //var obj = result as ObjectResult; 
             if (result == null)
             {
                 return NoContent();
