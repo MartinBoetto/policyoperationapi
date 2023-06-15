@@ -30,27 +30,35 @@ namespace PolicyOperation.ExternalServices.Service
              
         public async Task<IntermediariesUserDTO> GetIntermediariesForUser(CeiboUserModel ceiboUserModel, string token)
         {
-            using (HttpClient client = new HttpClient())
+            try
             {
-                //client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
-                client.DefaultRequestHeaders.Add("ApplicationId", "14");
-                client.DefaultRequestHeaders.Add("CompanyCode", "1");
-                client.DefaultRequestHeaders.Add("ClientTypeId", "1");
-
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-
-
-                string endpoint = "";
-                       endpoint = $"{endpointAddress}?userCode={ceiboUserModel.UserCode}" ;
-
-                using (var Response = await client.GetAsync(endpoint))
+                using (HttpClient client = new HttpClient())
                 {
-                    var result = await Response.Content.ReadAsStringAsync();
-                    var response = JsonConvert.DeserializeObject<Models.ExternalEntities.IntermediariesUserDTO>(result);
+                    //client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
+                    client.DefaultRequestHeaders.Add("ApplicationId", "14");
+                    client.DefaultRequestHeaders.Add("CompanyCode", "1");
+                    client.DefaultRequestHeaders.Add("ClientTypeId", "1");
 
-                    return response;
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+
+                    string endpoint = "";
+                    endpoint = $"{endpointAddress}?userCode={ceiboUserModel.UserCode}";
+
+                    using (var Response = await client.GetAsync(endpoint))
+                    {
+                        var result = await Response.Content.ReadAsStringAsync();
+                        var response = JsonConvert.DeserializeObject<Models.ExternalEntities.IntermediariesUserDTO>(result);
+
+                        return response;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         private static string GetUserFromToken(string token)

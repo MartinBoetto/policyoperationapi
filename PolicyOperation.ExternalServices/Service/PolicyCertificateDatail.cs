@@ -105,8 +105,8 @@ namespace PolicyOperation.ExternalServices.Service
                     }
                 } catch (Exception ex) 
                 { 
-                    Console.WriteLine(ex); 
-                    return null;
+                    Console.WriteLine(ex);
+                    throw new Exception(ex.Message);
                 }
             }
         }

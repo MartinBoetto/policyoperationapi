@@ -49,56 +49,54 @@ namespace PolicyOperation.Core.Entidad.Policy
 
         protected override async Task<IOperationResult> ExecuteAsync(PolicyRequest request, CancellationToken cancellationToken)
         {
-            // ... 
-            Console.WriteLine(request.puid);
-            _puid = new PuidModel(request.puid);
-
-            /*
-            //seteo el Username y BupId en cache
-            //List<CeiboUserModel> user = SetUserInCache();
-            //this.setCeiboUserModelCache(request.puid);
-            string userName = GetUserFromToken(request.token);
-            
-            //busco si tengo el userModel en cache, sino lo guardo
-            List<CeiboUserModel> list = _cacheProvider.Get<List<CeiboUserModel>>("_CeiboUserModel");
-            CeiboUserModel userModel = list.Find(x => x.UserName == userName); ;
-
-            //si no existe en cache lo busco y grabo
-            if (userModel == null)//(!list.Any((x => x.UserName == userName)))
+            try
             {
-                UserQueryParamsReqModel usqPmodel = new UserQueryParamsReqModel() { UserName = userName };
-                var resultQuery = await _timeRepository.QueryAsync(new GetDataUserQuery(usqPmodel));
-                userModel = ((IEnumerable<CeiboUserModel>)resultQuery).FirstOrDefault();
+                // ... 
+                Console.WriteLine(request.puid);
+                _puid = new PuidModel(request.puid);
 
-                setCeiboUserModelCache(userName, userModel);
+                CeiboUserModel userModel = null;
+                UserCaching userCaching = new UserCaching(_timeRepository, _cacheProvider);
+                userModel = await userCaching.GetuserFromCache(request.token) as CeiboUserModel;
+
+                //Flujo segun COreId
+                if (_puid.coreId == 1)
+                {
+                    PolicyModel model = await this.PolicyOfTime(request.token, _puid, userModel);
+                    return new SuccessResult(model);
+
+                    //metodo Time
+                }
+                else if (_puid.coreId == 2)
+                {
+                    PolicyModel model = await this.PolicyOfGuideWire(request.token, _puid, userModel);
+                    return new SuccessResult(model);
+                    //metodo GW
+                }
+                else
+                {
+                    return new SuccessResult();
+                }
+
             }
-            */
-            CeiboUserModel userModel = null;
-            UserCaching userCaching = new UserCaching(_timeRepository, _cacheProvider);
-            userModel = await userCaching.GetuserFromCache(request.token) as CeiboUserModel;
-
-            //Flujo segun COreId
-            if (_puid.coreId == 1) 
+            catch (Exception ex)
             {
-                PolicyModel model = await this.PolicyOfTime(request.token, _puid, userModel);
+                Console.WriteLine(ex.ToString());
+                ExceptionModel model = new ExceptionModel
+                {
+                    messages = new List<MessageModel> { new MessageModel {
+                        code = "GSS-500-000",
+                        help = ex.Message.ToString(),
+                        status = "500",
+                        text = ex.Message.ToString()
+                        }
+                    },
+                    httpStatusCode = 500
+                };
                 return new SuccessResult(model);
-
-                //metodo Time
-            }
-            else if (_puid.coreId == 2) 
-            {
-                PolicyModel model = await this.PolicyOfGuideWire(request.token, _puid, userModel);
-                return new SuccessResult(model);
-                //metodo GW
-            }
-            else
-            {
-                return new SuccessResult();
             }
 
 
-           
-            
         }
 
         private List<CeiboUserModel> CacheCeiboUserModel()

@@ -24,29 +24,29 @@ namespace PolicyOperation.ExternalServices.Service
         }
         public async Task<Rootobject> ValidateclientcertificatesAsync(int bupId, int certificateId, string token)
         {
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.DefaultRequestHeaders.Add("CoreId", "2");
-                client.DefaultRequestHeaders.Add("ApplicationId", "14");
-                client.DefaultRequestHeaders.Add("CompanyCode", "1");
-                client.DefaultRequestHeaders.Add("ClientTypeId", "1");
-                
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
-
-
-
-                string endpoint = $"{endpointAddress}?bupId={bupId}&certificateId={certificateId}";
-
-                using (var Response = await client.GetAsync(endpoint))
+                using (HttpClient client = new HttpClient())
                 {
-                    var result = await Response.Content.ReadAsStringAsync();
-                    var responseBup = JsonConvert.DeserializeObject<Rootobject>(result);
-                    
+                    client.DefaultRequestHeaders.Add("CoreId", "2");
+                    client.DefaultRequestHeaders.Add("ApplicationId", "14");
+                    client.DefaultRequestHeaders.Add("CompanyCode", "1");
+                    client.DefaultRequestHeaders.Add("ClientTypeId", "1");
 
-                    
-                    return responseBup;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
+
+                    string endpoint = $"{endpointAddress}?bupId={bupId}&certificateId={certificateId}";
+
+                    using (var Response = await client.GetAsync(endpoint))
+                    {
+                        var result = await Response.Content.ReadAsStringAsync();
+                        var responseBup = JsonConvert.DeserializeObject<Rootobject>(result);
+                        return responseBup;
+                    }
                 }
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
                         
         }

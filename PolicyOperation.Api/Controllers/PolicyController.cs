@@ -69,12 +69,20 @@ namespace PolicyOperation.Api.Controllers
             }
             else if (result.Value != null)
             {
-                var valurResult = result.Value as PoliciesSummaryModel;
-                if (valurResult.policiesList != null)
-                    return Ok(valurResult);
-                else
+                if (result.Value.GetType() == typeof(PoliciesSummaryModel))
+                {
+
+                    var valurResult = result.Value as PoliciesSummaryModel;
+                    if (valurResult.policiesList != null)
+                        return Ok(valurResult);
+                    else
+                        return StatusCode(500, valurResult.messages);
+                    ;
+                }else
+                {
+                    var valurResult = result.Value as ExceptionModel;
                     return StatusCode(500, valurResult.messages);
-                ;
+                }
             }
             else
             {

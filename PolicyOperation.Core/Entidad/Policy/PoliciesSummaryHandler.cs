@@ -41,21 +41,40 @@ namespace PolicyOperation.Core.Entidad.Policy
 
         protected override async Task<IOperationResult> ExecuteAsync(PoliciesSummaryRequest request, CancellationToken cancellationToken)
         {
-            // recupero el modelo de usuario de cache 
-            CeiboUserModel userModel = null;
-            UserCaching userCaching = new UserCaching(_timeRepository, _cacheProvider);
-            userModel = await userCaching.GetuserFromCache(request.token) as CeiboUserModel;
+            try
+            {
+                //throw new Exception();
+                // recupero el modelo de usuario de cache 
+                CeiboUserModel userModel = null;
+                UserCaching userCaching = new UserCaching(_timeRepository, _cacheProvider);
+                userModel = await userCaching.GetuserFromCache(request.token) as CeiboUserModel;
 
-            //Recupero la lista de intermediarios del usuario
-            IntermediariesUserDTO intermediariesList = await _intermediariesForUser.GetIntermediariesForUser(userModel, request.token);
+                //Recupero la lista de intermediarios del usuario
+                IntermediariesUserDTO intermediariesList = await _intermediariesForUser.GetIntermediariesForUser(userModel, request.token);
 
-            //Invoco al servicio de backend
-            PoliciesSummaryRequestDTO dto = GetPoliciesSummaryRequestDTO(request, intermediariesList);
-            PoliciesSummaryResponseDTO policiesSummaryResponseDTO = await _policiesSummary.GetPoliciesSummaries(dto, userModel);
-            //Mapeo el DTO al Modelo
-            PoliciesSummaryModel model = GetPoliciesSummary(policiesSummaryResponseDTO);
+                //Invoco al servicio de backend
+                PoliciesSummaryRequestDTO dto = GetPoliciesSummaryRequestDTO(request, intermediariesList);
+                PoliciesSummaryResponseDTO policiesSummaryResponseDTO = await _policiesSummary.GetPoliciesSummaries(dto, userModel);
+                //Mapeo el DTO al Modelo
+                PoliciesSummaryModel model = GetPoliciesSummary(policiesSummaryResponseDTO);
 
-            return new SuccessResult(model);
+                return new SuccessResult(model);
+            }catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                ExceptionModel model = new ExceptionModel
+                {
+                    messages = new List<MessageModel> { new MessageModel {
+                        code = "GSS-500-000",
+                        help = ex.Message.ToString(),
+                        status = "500",
+                        text = ex.Message.ToString()
+                        }
+                    },
+                    httpStatusCode = 500
+                };
+                return new SuccessResult(model); 
+            }
         }
 
 

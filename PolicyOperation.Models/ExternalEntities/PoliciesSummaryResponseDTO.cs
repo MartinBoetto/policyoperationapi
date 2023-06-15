@@ -8,7 +8,7 @@ namespace PolicyOperation.Models.ExternalEntities
 {
 
         public class PoliciesSummaryResponseDTO
-    {
+        {
             public List<Policy> policies { get; set; }
             public Paging paging { get; set; }
             public List<MessageDTO> messages { get; set; }
