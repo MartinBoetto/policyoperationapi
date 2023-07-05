@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using PolicyOperation.Models.Entidad;
 using System.IO;
 using System.IdentityModel.Tokens.Jwt;
+using Serilog;
 
 namespace PolicyOperation.ExternalServices.Service
 {
@@ -32,8 +33,10 @@ namespace PolicyOperation.ExternalServices.Service
         {
             try
             {
+                Log.Information("Metodo GetIntermediariesForUser");
                 using (HttpClient client = new HttpClient())
                 {
+                    client.Timeout = TimeSpan.FromSeconds(15);
                     //client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
                     client.DefaultRequestHeaders.Add("ApplicationId", "14");
                     client.DefaultRequestHeaders.Add("CompanyCode", "1");
@@ -45,18 +48,28 @@ namespace PolicyOperation.ExternalServices.Service
                     string endpoint = "";
                     endpoint = $"{endpointAddress}?userCode={ceiboUserModel.UserCode}";
 
+                    Log.Information("Invocaion BackEnd: " + endpoint);
+                    Log.Information("Request : " + ceiboUserModel.UserCode);
+                    Log.Information("Token : " + token);
+
                     using (var Response = await client.GetAsync(endpoint))
                     {
                         var result = await Response.Content.ReadAsStringAsync();
                         var response = JsonConvert.DeserializeObject<Models.ExternalEntities.IntermediariesUserDTO>(result);
-
+                        Log.Information("Response :" + result);
                         return response;
                     }
                 }
             }
+            catch (TaskCanceledException to)
+            {
+                Log.Information("Error GetIntermediariesForUser: " + to.Message);
+                throw new Exception("Se exidio el tiempo de espera. No se pudo procesar la petición");
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Log.Information("Error GetIntermediariesForUser: " + ex.Message);
+                throw new Exception("Error Interno. No se pudo procesar la petición");
             }
             
         }

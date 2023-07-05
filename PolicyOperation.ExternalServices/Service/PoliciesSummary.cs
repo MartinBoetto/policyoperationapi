@@ -14,6 +14,9 @@ using System.IO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Policy;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using System.Threading;
 
 namespace PolicyOperation.ExternalServices.Service
 {
@@ -32,9 +35,12 @@ namespace PolicyOperation.ExternalServices.Service
              
         public async Task<PoliciesSummaryResponseDTO> GetPoliciesSummaries(PoliciesSummaryRequestDTO dto, CeiboUserModel userModel)
         {
+            Log.Information("Metodo GetPoliciesSummaries");
             try { 
                 using (HttpClient client = new HttpClient())
                 {
+                    client.Timeout = TimeSpan.FromSeconds(15);
+
                     //client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
                     client.DefaultRequestHeaders.Add("ApplicationId", "14");
                     client.DefaultRequestHeaders.Add("CompanyCode", "1");
@@ -65,21 +71,33 @@ namespace PolicyOperation.ExternalServices.Service
                                         NullValueHandling = NullValueHandling.Ignore
                                     });
                         var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json"); // use MediaTypeNames.Application.Json in Core 3.0+ and Standard 2.1+
-                
-                        using (var Response = await client.PostAsync(endpoint, stringContent))
+
+                    Log.Information("Invocaion BackEnd: " + endpoint);
+                    Log.Information("Request : " + json);
+                    Log.Information("Token : " + tktESBbase64String);
+                    
+
+                    using (var Response = await client.PostAsync(endpoint, stringContent))
                         {
                             var result = await Response.Content.ReadAsStringAsync();
                             var response = JsonConvert.DeserializeObject<Models.ExternalEntities.PoliciesSummaryResponseDTO>(result);
-
+                            Log.Information("Response :" + result);
                             return response;
                           }
                
                     }
                 }
+            catch (TaskCanceledException to)
+            {
+                Log.Information("Error GetPoliciesSummaries: " + to.Message);
+                throw new Exception("Se exidio el tiempo de espera. No se pudo procesar la petición");
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Log.Information("Error GetPoliciesSummaries: " + ex.Message);
+                throw new Exception("Error Interno. No se pudo procesar la petición");
             }
+
         }
 
         private static string GetUserFromToken(string token)

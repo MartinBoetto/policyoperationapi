@@ -7,7 +7,8 @@ namespace PolicyOperation.Core.Entidad.Policy
         {
             public Policysearch policySearch { get; set; }
             public string token { get; set; }
-        }
+            public string uid { get; set; } = Guid.NewGuid().ToString();
+    }
 
         public class Policysearch
         {

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PolicyOperation.Models.Entidad;
 using System.Net;
+using Serilog;
 
 namespace PolicyOperation.ExternalServices.Service
 {
@@ -36,34 +37,51 @@ namespace PolicyOperation.ExternalServices.Service
       
         public async Task<PolicyCertificateDatailDTO> GetPolicyDetails(PuidModel puid, string token)
         {
-            using (HttpClient client = new HttpClient())
+
+            Log.Information("Metodo GetPolicyDetails");
+            try
             {
-                client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
-                client.DefaultRequestHeaders.Add("ApplicationId", "14");
-                client.DefaultRequestHeaders.Add("CompanyCode", "1");
-                client.DefaultRequestHeaders.Add("ClientTypeId", "1");
-
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
-
-
-
-                string endpoint = "";
-                if (puid.coreId == 1)
-                    endpoint = $"{endpointAddress}?certificateId={puid.certificateId}" +
-                        $"&origenCode={13}" +
-                        $"&aplicationCode={17}";
-
-                if (puid.coreId == 2)
-                    endpoint = $"{endpointAddress}?referenceNumber={puid.certificateId}" +
-                        $"certificateNumber={puid.certificateNumber}";
-
-                using (var Response = await client.GetAsync(endpoint))
+                using (HttpClient client = new HttpClient())
                 {
-                    var result = await Response.Content.ReadAsStringAsync();
-                    var response = JsonConvert.DeserializeObject<Models.ExternalEntities.PolicyCertificateDatailDTO>(result);
+                    client.Timeout = TimeSpan.FromSeconds(15);
+                    client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
+                    client.DefaultRequestHeaders.Add("ApplicationId", "14");
+                    client.DefaultRequestHeaders.Add("CompanyCode", "1");
+                    client.DefaultRequestHeaders.Add("ClientTypeId", "1");
 
-                    return response;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
+
+                    
+                    string endpoint = "";
+                    if (puid.coreId == 1)
+                        endpoint = $"{endpointAddress}?certificateId={puid.certificateId}" +
+                            $"&origenCode={13}" +
+                            $"&aplicationCode={17}";
+
+                    if (puid.coreId == 2)
+                        endpoint = $"{endpointAddress}?referenceNumber={puid.certificateId}" +
+                            $"certificateNumber={puid.certificateNumber}";
+
+                    Log.Information("Invocaion BackEnd: " + endpoint);
+                    Log.Information("Token : " + token);
+                    using (var Response = await client.GetAsync(endpoint))
+                    {
+                        var result = await Response.Content.ReadAsStringAsync();
+                        var response = JsonConvert.DeserializeObject<Models.ExternalEntities.PolicyCertificateDatailDTO>(result);
+                        Log.Information("Response :" + result);
+                        return response;
+                    }
                 }
+            }
+            catch (TaskCanceledException to)
+            {
+                Log.Information("Error GetPolicyDetails: " + to.Message);
+                throw new Exception("Se exidio el tiempo de espera. No se pudo procesar la petición");
+            }
+            catch (Exception ex)
+            {
+                Log.Information("Error GetPolicyDetails: " + ex.Message);
+                throw new Exception("Error Interno. No se pudo procesar la petición");
             }
         }
 

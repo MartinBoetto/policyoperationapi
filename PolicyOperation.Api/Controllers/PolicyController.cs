@@ -8,6 +8,9 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Azure.Core;
+using Serilog;
 
 namespace PolicyOperation.Api.Controllers
 {
@@ -22,13 +25,14 @@ namespace PolicyOperation.Api.Controllers
         //[Authorize]        
         public async Task<IActionResult> GetPolicyById(string? puid, [FromHeader] string? Authorization)
         {
+           
             //HttpContext.Response.Headers.Add("x-my-custom-header", "individual response");
             PolicyRequest requestModel = new PolicyRequest
             {
                 puid = puid,
                 token = Authorization
             };
-            
+            Log.Information("OrquestationId: " + requestModel.uid);
             var result = await CallHandlerFromRequestAsync(requestModel) as OkObjectResult;
 
 
@@ -60,6 +64,8 @@ namespace PolicyOperation.Api.Controllers
         {
 
             requestModel.token = Authorization;
+            Log.Information("OrquestationId: " + requestModel.uid);
+
             var result = await CallHandlerFromRequestAsync(requestModel) as OkObjectResult;
 
 

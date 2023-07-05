@@ -2,6 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using static PolicyOperation.Infrastructure.AppConfiguration.AppConfig;
+using MediatR;
+using PolicyOperation.Core;
+using PolicyOperation.Core.Entidad.Policy;
+using PolicyOperation.Core.Behavior;
 
 namespace PolicyOperation.Infrastructure.IoC
 {
@@ -34,6 +38,10 @@ namespace PolicyOperation.Infrastructure.IoC
             services.AddMemoryCache();
             services.AddSingleton(intermediariesForUser);
             services.AddSingleton(policiesSummary);
+
+            
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogsBehavior<,>));
+            services.AddHttpContextAccessor();
         }
     }
 }
