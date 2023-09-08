@@ -39,7 +39,7 @@ namespace PolicyOperation.ExternalServices.Service
             try { 
                 using (HttpClient client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(15);
+                    client.Timeout = TimeSpan.FromSeconds(30);
 
                     //client.DefaultRequestHeaders.Add("CoreId", puid.coreId.ToString());
                     client.DefaultRequestHeaders.Add("ApplicationId", "14");

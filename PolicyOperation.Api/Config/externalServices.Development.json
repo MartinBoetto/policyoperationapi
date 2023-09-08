@@ -3,20 +3,20 @@
     "SERVICE_NAME": "SERVICE_URL"
   },
   "Validateclientcertificates": {
-    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/ssa/policies/certificates/time/validateclientcertificates"
+    "BaseUrl": "https://iib-pre.gruposancorseguros.com/ssa/policies/certificates/time/validateclientcertificates"
   },
 
   "PolicyCertificateDatail": {
-    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/arg/channel/policycertificates/details"
+    "BaseUrl": "https://iib-pre.gruposancorseguros.com/arg/channel/policycertificates/details"
   },
 
   "ProfileUserData": {
     "BaseUrl": "https://portalintermediarios-pre-api.gruposancorseguros.com/api/v2/user/profileuserdata"
   },
   "IntermediariesForUser": {
-    "BaseUrl": "https://iib-tst.gruposancorseguros.com/ssa/policies/intermediaries/time/list"
+    "BaseUrl": "https://iib-pre.gruposancorseguros.com/ssa/policies/intermediaries/time/list"
   },
   "PoliciesSummary": {
-    "BaseUrl": "https://iib-neo-tst.gruposancorseguros.com/arg/channel/policies/ids"
+    "BaseUrl": "https://iib-pre.gruposancorseguros.com/arg/channel/policies/ids"
   }
 }
